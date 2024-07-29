@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import parse from "html-react-parser";
 import { getDetail, getList } from "../../../../libs/microcms";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const { contents } = await getList();
 
@@ -25,17 +27,17 @@ export default async function StaticDetailPage({
   if (!post) {
     notFound();
   }
-  
+
+  const eyecatchUrl = post.eyecatch?.url;
+
   return (
     <div>
       <Header />
       <div className="prose mx-auto">
         <h1>{post.title}</h1>
-        {post.eyecatch && post.eyecatch.url ? (
-                    <img src={post.eyecatch.url} className="rounded-xl" alt={post.title} />
-                  ) : (
-                    <div className="rounded-xl bg-gray-200 h-48 w-full" />
-                  )}
+        {eyecatchUrl && (
+          <img src={eyecatchUrl} className="rounded-xl" alt="Eyecatch" />
+        )}
         <div>{parse(post.content)}</div>
       </div>
     </div>
